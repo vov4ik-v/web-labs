@@ -14,7 +14,17 @@
     <div class="logo">
       <img src="img/logo.png" alt="Trafalgar logo">
     </div>
-    <ul class="nav-list">
+
+    <input id="menu__toggle" type="checkbox" />
+
+    <label class="burger__menu" for="menu__toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+
+    <!-- Navigation menu -->
+    <ul class="nav-list burger__navbar" id="nav-list">
       <li class="nav-item">
         <a class="nav-link nav-link--active" href="">Home</a>
       </li>
@@ -34,6 +44,8 @@
   </nav>
 </header>
 
+
+
 <main>
   <div class="background-element">
     <img src="img/element.png" alt="Background element">
@@ -42,7 +54,8 @@
   <section class="hero-section">
     <div class="hero-content">
       <h1 class="hero-title">Virtual healthcare for you</h1>
-      <p class="hero-description">Trafalgar provides progressive, and affordable healthcare, accessible on mobile and online for everyone</p>
+      <p class="hero-description">Trafalgar provides progressive, and affordable healthcare, accessible on mobile and
+        online for everyone</p>
       <a href="" class="cta-button">Consult today</a>
     </div>
     <div class="hero-image">
@@ -57,7 +70,9 @@
     <div class="providers-content">
       <h2 class="section-title">Leading healthcare providers</h2>
       <hr class="section-divider">
-      <p class="section-description">Trafalgar provides progressive, and affordable healthcare, accessible on mobile and online for everyone. To us, it's not just work. We take pride in the solutions we deliver</p>
+      <p class="section-description">Trafalgar provides progressive, and affordable healthcare, accessible on mobile
+        and
+        online for everyone. To us, it's not just work. We take pride in the solutions we deliver</p>
       <a href="" class="secondary-button">Learn more</a>
     </div>
   </section>
@@ -67,7 +82,8 @@
       <h2 class="section-title">Our services</h2>
       <hr class="section-divider">
       <p class="section-description">
-        We provide to you the best choices for you. Adjust it to your health needs and make sure you undergo treatment with our highly qualified doctors you can consult with us which type of service is suitable for your health
+        We provide to you the best choices for you. Adjust it to your health needs and make sure you undergo treatment
+        with our highly qualified doctors you can consult with us which type of service is suitable for your health
       </p>
     </div>
     <div class="background-element">
@@ -80,12 +96,14 @@
       <div class="service-card">
         <img src="img/Frame.png" class="service-icon" alt="Search doctor icon">
         <h4 class="service-title">Search doctor</h4>
-        <p class="service-description">Choose your doctor from thousands of specialist, general, and trusted hospitals</p>
+        <p class="service-description">Choose your doctor from thousands of specialist, general, and trusted
+          hospitals</p>
       </div>
       <div class="service-card">
         <img src="img/Frame (1).png" class="service-icon" alt="Online pharmacy icon">
         <h4 class="service-title">Online pharmacy</h4>
-        <p class="service-description">Buy your medicines with our mobile application with a simple delivery system</p>
+        <p class="service-description">Buy your medicines with our mobile application with a simple delivery
+          system</p>
       </div>
       <div class="service-card">
         <img src="img/Frame (2).png" class="service-icon" alt="Consultation icon">
@@ -100,7 +118,8 @@
       <div class="service-card">
         <img src="img/Frame (4).png" class="service-icon" alt="Emergency care icon">
         <h4 class="service-title">Emergency care</h4>
-        <p class="service-description">You can get 24/7 urgent care for yourself or your children and your lovely family</p>
+        <p class="service-description">You can get 24/7 urgent care for yourself or your children and your lovely
+          family</p>
       </div>
       <div class="service-card">
         <img src="img/Frame (5).png" class="service-icon" alt="Tracking icon">
@@ -133,10 +152,17 @@
       </li>
     </ul>
   </nav>
+
   <div class="footer-dots footer-dots--bottom">
     <img src="img/element (3).png" alt="Footer bottom dots">
   </div>
+
 </footer>
+<script>
+  document.getElementById('burger-menu').addEventListener('click', function () {
+    document.getElementById('nav-list').classList.toggle('show');
+  });
+</script>
 </body>
 
 </html>
