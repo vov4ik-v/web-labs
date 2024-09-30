@@ -2,52 +2,102 @@
 <html lang="en" dir="ltr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Lab 3</title>
-    <link rel="stylesheet" href="css/styles.css">
+  <title>Lab 4</title>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
-    <header>
-        <h1>Taxi Manager</h1>
-        <nav class="header__nav">
-            <a>Home</a>
-        </nav>
-        <div class="search_block">
-            <input placeholder="Client name.." id="input_search">
-            <button type="button" id="search_btn" class="btn_card" style="width: 100px;">Search</button>
-            <button type="button" id="cancel_search_btn" class="cancel-button btn_card_cansel"
-                style="width: 100px;">Cancel</button>
-        </div>
-    </header>
-    <main id="main_page" class="main__container">
-        <div class="main__container manager">
-            <div class="sort-goods">
-                <h3>Sort orders by price</h3>
-                <label class="switch">
-                    <input type="checkbox" id="sort_objects">
-                    <span class="slider round"></span>
-                </label>
-            </div>
-            <div class="count-price">
-                <hr>
-                <div class="block_price">
-                    <h3>Count price of all orders:</h3>
-                    <span id="count_price"></span>
-                </div>
-                <button type="button" class="btn-primary btn_card" id="count_price_btn"
-                    style="width: 100px;">Count</button>
-            </div>
-        </div>
-        <div class="main__container manager-orders">
-            <ul class="orders_list" id="orders_list">
-            </ul>
-        </div>
-    </main>
-
-    <script type="module" src="js/index.js"></script>
+<header>
+  <h1>Taxi Manager</h1>
+  <nav class="header__nav">
+    <a onclick="toggleMainPage()">Home</a>
+    <a onclick="toggleCreatePage()">Create</a>
+  </nav>
+  <div class="search_block">
+    <input placeholder="Client name.." id="input_search">
+    <button type="button" id="search_btn" class="btn_card" style="width: 100px;">Search</button>
+    <button type="button" id="cancel_search_btn" class="cancel-button btn_card_cansel"
+            style="width: 100px;">Cancel
+    </button>
+  </div>
+</header>
+<main id="main_page" class="main__container">
+  <div class="main__container manager">
+    <div class="sort-goods">
+      <h3>Sort orders by price</h3>
+      <label class="switch">
+        <input type="checkbox" id="sort_objects">
+        <span class="slider round"></span>
+      </label>
+    </div>
+    <div class="count-price">
+      <hr>
+      <div class="block_price">
+        <h3>Count price of all orders:</h3>
+        <span id="count_price"></span>
+      </div>
+      <button type="button" class="btn-primary btn_card" id="count_price_btn"
+              style="width: 100px;">Count
+      </button>
+    </div>
+  </div>
+  <div class="main__container manager-orders">
+    <ul class="orders_list" id="orders_list">
+    </ul>
+  </div>
+</main>
+<main id="create_page" class="create_container">
+  <form id="add_form" class="add-form">
+    <h2>Create order for car</h2>
+    <div class="create-block">
+      <span>Client full name</span>
+      <input type="text" placeholder="Client name.." id="name_input">
+      <span>Destination</span>
+      <textarea type="text" placeholder="Destination.." id="destination_input"></textarea>
+      <span>Car brand:</span>
+      <select id="brand_input">
+        <option value="Shkoda">Shkoda</option>
+        <option value="Ford">Ford</option>
+        <option value="Kia">Kia</option>
+        <option value="Oppel">Oppel</option>
+        <option value="Audi">Audi</option>
+      </select>
+      <span>Order date:</span>
+      <input type="date" id="order_date_input">
+      <span>Price:</span>
+      <input placeholder="Price in $" type="number" id="price_input">
+    </div>
+    <button type="submit" class="btn-download" id="submit_btn">Add order</button>
+  </form>
+</main>
+<main id="edit_page" class="edit_container">
+  <form id="edit_form" class="add-form">
+    <h2>Edit order for car</h2>
+    <div class="create-block">
+      <span>Client full name</span>
+      <input type="text" placeholder="Client name.." id="edit_name_input">
+      <span>Destination</span>
+      <textarea type="text" placeholder="Destination.." id="edit_destination_input"></textarea>
+      <span>Car brand:</span>
+      <select id="edit_brand_input">
+        <option value="Shkoda">Shkoda</option>
+        <option value="Ford">Ford</option>
+        <option value="Kia">Kia</option>
+        <option value="Oppel">Oppel</option>
+        <option value="Audi">Audi</option>
+      </select>
+      <span>Order date:</span>
+      <input type="date" id="edit_order_date_input">
+      <span>Price:</span>
+      <input placeholder="Price in $" type="number" id="edit_price_input">
+    </div>
+    <button type="submit" class="btn-download" id="edit_btn">Edit order</button>
+  </form>
+</main>
+<script src="js/index.js"></script>
 </body>
 
 </html>
