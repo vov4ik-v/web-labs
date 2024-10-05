@@ -13,8 +13,6 @@ const edit_brand_input = document.getElementById("edit_brand_input")
 const edit_order_date_input = document.getElementById("edit_order_date_input")
 const edit_price_input = document.getElementById("edit_price_input")
 
-
-
 const add_button = document.getElementById("submit_btn")
 const search_button = document.getElementById("search_btn")
 const cancel_button = document.getElementById("cancel_search_btn")
@@ -29,19 +27,20 @@ const mainPage = document.getElementById("main_page");
 const createPage = document.getElementById("create_page");
 const editPage = document.getElementById("edit_page")
 
+const API_URL = 'http://localhost:8088/orders';
 
-let objects = [
-];
+
+let objects = [];
 let current_objects = []
 
 let id = 0;
 let currentId = -1;
 let currentDeleteId = -1;
 
-const object_template = ({ id, full_name, destination, car_brand, order_date, price }) => `
+const object_template = ({ id, name, destination, car_brand, order_date, price }) => `
 <li id="${id}" class="item">
 <div class="card">
-    <h4 class="card-type">Name: ${full_name}</h4>
+    <h4 class="card-type">Name: ${name}</h4>
     <h4 class="card-price">Destination: ${destination}</h4>
     <h4 class="card-brand">Brand: ${car_brand}</h4>
     <h4 class="card-production-date">Date: ${order_date}</h4>
@@ -53,14 +52,14 @@ const object_template = ({ id, full_name, destination, car_brand, order_date, pr
 </div>
 </li>`;
 
-const oject_count_template = (count) => `<h4>${count}$</h4>`
+const oject_count_template = (count) => `<h4>${count}$</h4>`;
 
 const clear_inputs = () => {
   nameInput.value = "";
   destinationInput.value = "";
   order_dateInput.value = "";
   priceInput.value = "";
-}
+};
 
 const clear_edits = () => {
   edit_name_input.value = "";
@@ -70,10 +69,10 @@ const clear_edits = () => {
   edit_price_input.value = "";
 };
 
-const add_object_to_page = ({ id, full_name, destination, car_brand, order_date, price }) => {
+const add_object_to_page = ({ id, name, destination, car_brand, order_date, price }) => {
   object_container.insertAdjacentHTML(
     "beforeend",
-    object_template({ id, full_name, destination, car_brand, order_date, price })
+    object_template({ id, name, destination, car_brand, order_date, price })
   );
 };
 
@@ -93,87 +92,157 @@ const add_count_price = (price) => {
   );
 };
 
+const fetchOrders = async () => {
+  try {
+    const response = await fetch(`${API_URL}`);
+    const data = await response.json();
+    objects = data;
+    current_objects = objects;
+    object_list_search(objects);
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+  }
+};
+
+
 const get_values = () => {
   return {
-    full_name: nameInput.value,
-    destination: destinationInput.value,
-    car_brand: brandInput.value,
-    order_date: order_dateInput.value,
-    price: priceInput.value,
+    name: nameInput.value.trim(),
+    destination: destinationInput.value.trim(),
+    car_brand: brandInput.value,  // це select
+    order_date: order_dateInput.value,  // вже в правильному форматі yyyy-mm-dd
+    price: parseFloat(priceInput.value)  // Перетворення ціни на число
   };
 };
+
 
 const getEditValues = () => {
   return {
-    full_name: edit_name_input.value,
-    destination: edit_destinationInput.value,
+    name: edit_name_input.value.trim(),
+    destination: edit_destinationInput.value.trim(),
     car_brand: edit_brand_input.value,
     order_date: edit_order_date_input.value,
-    price: edit_price_input.value,
+    price: parseFloat(edit_price_input.value)
   };
 };
 
-const add_object = ({ full_name, destination, car_brand, order_date, price }) => {
-  const new_object = {
-    id: id,
-    full_name: full_name,
-    destination: destination,
-    car_brand: car_brand,
-    order_date: order_date,
-    price: price,
-  };
-  id += 1;
-  objects.push(new_object);
-  add_object_to_page(new_object);
-  current_objects = objects;
-}
+const add_object = async ({ name, destination, car_brand, order_date, price }) => {
+  const new_object = { name, destination, car_brand, order_date, price };
 
-add_button.addEventListener("click", (event) => {
+  try {
+    const response = await fetch(`${API_URL}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(new_object)
+    });
+
+    if (!response.ok) throw new Error('Failed to add order');
+
+    const createdOrder = await response.json();
+    objects.push(createdOrder);
+    add_object_to_page(createdOrder);
+    current_objects = objects;
+  } catch (error) {
+    console.error("Error adding order:", error);
+  }
+};
+
+const edit_object = async ({ id, name, destination, car_brand, order_date, price }) => {
+  const updated_object = { name, destination, car_brand, order_date, price };
+
+  try {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updated_object)
+    });
+
+    if (!response.ok) throw new Error('Failed to update order');
+
+    const updatedOrder = await response.json();
+    const index = objects.findIndex(ob => ob.id === id);
+    objects[index] = updatedOrder;
+    object_list_search(objects);
+  } catch (error) {
+    console.error("Error updating order:", error);
+  }
+};
+
+
+
+
+const delete_object = async (id) => {
+  try {
+    const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+
+    if (!response.ok) throw new Error('Failed to delete order');
+
+    objects = objects.filter(ob => ob.id !== id);
+    object_list_search(objects);
+  } catch (error) {
+    console.error("Error deleting order:", error);
+  }
+};
+
+
+add_button.addEventListener("click", async (event) => {
   event.preventDefault();
 
-  const { full_name, destination, car_brand, order_date, price } = get_values();
-  if (full_name === "" || destination === "" || car_brand === "" || order_date === "" || price === "") {
+  const { name, destination, car_brand, order_date, price } = get_values();
+  if (name === "" || destination === "" || car_brand === "" || order_date === "" || price === "") {
     alert("The fields must not be empty!");
   } else if (price <= 0) {
     alert("The price must be positive!");
   } else {
-    add_object({ full_name, destination, car_brand, order_date, price });
+    await add_object({ name, destination, car_brand, order_date, price });
     toggleMainPage();
     clear_inputs();
   }
-})
+});
+
+edit_btn.addEventListener("click", async (event) => {
+  event.preventDefault();
+  const { name, destination, car_brand, order_date, price } = getEditValues();
+  if (name === "" || destination === "" || car_brand === "" || order_date === "" || price === "") {
+    alert("The fields must not be empty!");
+  } else if (price <= 0) {
+    alert("The price must be positive!");
+  } else {
+    await edit_object({ id: currentId, name, destination, car_brand, order_date, price });
+    toggleEdit();
+    clear_edits();
+  }
+});
 
 search_button.addEventListener("click", (event) => {
-    const find_object = objects.filter(
-      (obj) => obj.full_name.search(input_search.value) !== -1
-    );
-    object_list_search(find_object);
-  }
-);
+  const find_object = objects.filter(
+    (obj) => obj.name.search(input_search.value) !== -1
+  );
+  object_list_search(find_object);
+});
 
 cancel_button.addEventListener("click", () => {
-    input_search.value = "";
+  input_search.value = "";
+  object_list_search(objects);
+});
+
+sort_button.addEventListener("change", function () {
+  if (this.checked) {
+    const sort_objects = objects.slice();
+    sort_objects.sort(function (a, b) {
+      let priceA = Number(a.price),
+        priceB = Number(b.price);
+      return priceA - priceB;
+    });
+    object_list_search(sort_objects);
+  } else {
     object_list_search(objects);
   }
-)
-ґ
-sort_button.addEventListener("change", function () {
-    if (this.checked) {
-      const sort_objects = objects.slice();
-      sort_objects.sort(function (a, b) {
-        let priceA = Number(a.price),
-          priceB = Number(b.price);
-        if (priceA < priceB) return -1;
-        if (priceA > priceB) return 1;
-        return 0;
-      });
-      object_list_search(sort_objects);
-
-    } else {
-      object_list_search(objects);
-    }
-  }
-)
+});
 
 count_price_btn.addEventListener("click", () => {
   let count = 0;
@@ -181,29 +250,23 @@ count_price_btn.addEventListener("click", () => {
     count += Number(o.price);
   });
   add_count_price(count);
-})
+});
 
-edit_btn.addEventListener("click", (event) => {
-  event.preventDefault();
-  const { full_name, destination, car_brand, order_date, price } = getEditValues();
-  if (full_name === "" || destination === "" || car_brand === "" || order_date === "" || price === "") {
-    alert("The fields must not be empty!");
-  }else if (price <= 0) {
-    alert("The price must be positive!");
-  }
-  else {
-    let edit_obj = objects.find(ob => ob.id === currentId);
-    edit_obj.full_name = full_name;
-    edit_obj.destination = destination;
-    edit_obj.car_brand = car_brand;
-    edit_obj.order_date = order_date;
-    edit_obj.price = price;
+function clickEdit(current_id) {
+  toggleEdit();
+  currentId = current_id;
+  let current_obj = objects.find(ob => ob.id === currentId);
 
-    clear_edits();
-    toggleEdit();
-    object_list_search(objects);
-  }
-})
+  edit_name_input.value = current_obj.name;
+  edit_destinationInput.value = current_obj.destination;
+  edit_brand_input.value = current_obj.car_brand;
+  edit_order_date_input.value = current_obj.order_date;
+  edit_price_input.value = current_obj.price;
+}
+
+function clickDelete(current_id) {
+  delete_object(current_id);
+}
 
 function toggleMainPage() {
   if (mainPage.classList.contains(CLOSE_CLASSNAME)) {
@@ -228,25 +291,4 @@ function toggleEdit() {
   editPage.classList.toggle(OPEN_CLASSNAME);
 }
 
-function clickEdit(current_id) {
-  toggleEdit();
-  currentId = current_id;
-  let current_obj = objects.find(ob => ob.id === currentId);
-
-  console.log(currentId);
-  edit_name_input.value = current_obj.full_name;
-  edit_destinationInput.value = current_obj.destination;
-  edit_brand_input.value = current_obj.car_brand;
-  edit_order_date_input.value = current_obj.order_date;
-  edit_price_input.value = current_obj.price;
-}
-
-function clickDelete(current_id) {
-  currentDeleteId = current_id;
-  let current_obj = objects.find(ob => ob.id === current_id);
-  let index = objects.indexOf(current_obj);
-  if (index > -1) {
-    objects.splice(index, 1);
-  }
-  object_list_search(objects);
-}
+window.addEventListener('DOMContentLoaded', fetchOrders);
