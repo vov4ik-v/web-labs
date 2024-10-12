@@ -4,53 +4,52 @@ const destinationInput = document.getElementById("destination_input");
 const brandInput = document.getElementById("brand_input");
 const order_dateInput = document.getElementById("order_date_input");
 const priceInput = document.getElementById("price_input");
-const input_search = document.getElementById("input_search")
+const input_search = document.getElementById("input_search");
 const count_price = document.getElementById("count_price");
 
 const edit_name_input = document.getElementById("edit_name_input");
 const edit_destinationInput = document.getElementById("edit_destination_input");
-const edit_brand_input = document.getElementById("edit_brand_input")
-const edit_order_date_input = document.getElementById("edit_order_date_input")
-const edit_price_input = document.getElementById("edit_price_input")
+const edit_brand_input = document.getElementById("edit_brand_input");
+const edit_order_date_input = document.getElementById("edit_order_date_input");
+const edit_price_input = document.getElementById("edit_price_input");
 
-const add_button = document.getElementById("submit_btn")
-const search_button = document.getElementById("search_btn")
-const cancel_button = document.getElementById("cancel_search_btn")
-const sort_button = document.getElementById("sort_objects")
-const count_price_btn = document.getElementById("count_price_btn")
-const edit_btn = document.getElementById("edit_btn")
+const add_button = document.getElementById("submit_btn");
+const search_button = document.getElementById("search_btn");
+const cancel_button = document.getElementById("cancel_search_btn");
+const sort_button = document.getElementById("sort_objects");
+const count_price_btn = document.getElementById("count_price_btn");
+const edit_btn = document.getElementById("edit_btn");
 
 const CLOSE_CLASSNAME = "close";
 const OPEN_CLASSNAME = "open";
 
 const mainPage = document.getElementById("main_page");
 const createPage = document.getElementById("create_page");
-const editPage = document.getElementById("edit_page")
+const editPage = document.getElementById("edit_page");
 
 const API_URL = 'http://localhost:8088/orders';
 
-
 let objects = [];
-let current_objects = []
+let current_objects = [];
 
 let id = 0;
 let currentId = -1;
 let currentDeleteId = -1;
 
 const object_template = ({ id, name, destination, car_brand, order_date, price }) => `
-<li id="${id}" class="item">
-<div class="card">
-    <h4 class="card-type">Name: ${name}</h4>
-    <h4 class="card-price">Destination: ${destination}</h4>
-    <h4 class="card-brand">Brand: ${car_brand}</h4>
-    <h4 class="card-production-date">Date: ${order_date}</h4>
-    <h4 class="card-production-date">Price: ${price}$</h4>
-    <div class="block_btn">
-    <button id="edit_btn${id}" type="button" class="btn-primary btn_card" onclick="clickEdit(${id})">Edit</button>
-    <button type="button" id="delete_btn" class="btn_card_cansel" onclick="clickDelete(${id})">Delete</button>
+  <li id="${id}" class="item">
+    <div class="card">
+      <h4 class="card-type">Name: ${name}</h4>
+      <h4 class="card-price">Destination: ${destination}</h4>
+      <h4 class="card-brand">Brand: ${car_brand}</h4>
+      <h4 class="card-production-date">Date: ${order_date}</h4>
+      <h4 class="card-production-date">Price: ${price}$</h4>
+      <div class="block_btn">
+        <button id="edit_btn${id}" type="button" class="btn-primary btn_card" onclick="clickEdit(${id})">Edit</button>
+        <button type="button" id="delete_btn" class="btn_card_cansel" onclick="clickDelete(${id})">Delete</button>
+      </div>
     </div>
-</div>
-</li>`;
+  </li>`;
 
 const oject_count_template = (count) => `<h4>${count}$</h4>`;
 
@@ -70,10 +69,7 @@ const clear_edits = () => {
 };
 
 const add_object_to_page = ({ id, name, destination, car_brand, order_date, price }) => {
-  object_container.insertAdjacentHTML(
-    "beforeend",
-    object_template({ id, name, destination, car_brand, order_date, price })
-  );
+  object_container.insertAdjacentHTML("beforeend", object_template({ id, name, destination, car_brand, order_date, price }));
 };
 
 const object_list_search = (objects) => {
@@ -86,10 +82,7 @@ const object_list_search = (objects) => {
 
 const add_count_price = (price) => {
   count_price.innerHTML = "";
-  count_price.insertAdjacentHTML(
-    "beforeend",
-    oject_count_template(price)
-  );
+  count_price.insertAdjacentHTML("beforeend", oject_count_template(price));
 };
 
 const fetchOrders = async () => {
@@ -104,17 +97,29 @@ const fetchOrders = async () => {
   }
 };
 
+const searchOrders = async (query) => {
+  if (!query || query.trim() === "") {
+    await fetchOrders();
+    return;
+  }
+  try {
+    const response = await fetch(`${API_URL}/search?query=${encodeURIComponent(query)}`);
+    const data = await response.json();
+    object_list_search(data);
+  } catch (error) {
+    console.error("Error searching orders:", error);
+  }
+};
 
 const get_values = () => {
   return {
     name: nameInput.value.trim(),
     destination: destinationInput.value.trim(),
-    car_brand: brandInput.value,  // це select
-    order_date: order_dateInput.value,  // вже в правильному форматі yyyy-mm-dd
-    price: parseFloat(priceInput.value)  // Перетворення ціни на число
+    car_brand: brandInput.value,
+    order_date: order_dateInput.value,
+    price: parseFloat(priceInput.value)
   };
 };
-
 
 const getEditValues = () => {
   return {
@@ -132,9 +137,7 @@ const add_object = async ({ name, destination, car_brand, order_date, price }) =
   try {
     const response = await fetch(`${API_URL}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(new_object)
     });
 
@@ -155,9 +158,7 @@ const edit_object = async ({ id, name, destination, car_brand, order_date, price
   try {
     const response = await fetch(`${API_URL}/${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updated_object)
     });
 
@@ -172,9 +173,6 @@ const edit_object = async ({ id, name, destination, car_brand, order_date, price
   }
 };
 
-
-
-
 const delete_object = async (id) => {
   try {
     const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
@@ -187,7 +185,6 @@ const delete_object = async (id) => {
     console.error("Error deleting order:", error);
   }
 };
-
 
 add_button.addEventListener("click", async (event) => {
   event.preventDefault();
@@ -218,24 +215,24 @@ edit_btn.addEventListener("click", async (event) => {
   }
 });
 
-search_button.addEventListener("click", (event) => {
-  const find_object = objects.filter(
-    (obj) => obj.name.search(input_search.value) !== -1
-  );
-  object_list_search(find_object);
+search_button.addEventListener("click", async (event) => {
+  event.preventDefault();
+  const query = input_search.value.trim();
+
+  await searchOrders(query);
 });
+
 
 cancel_button.addEventListener("click", () => {
   input_search.value = "";
-  object_list_search(objects);
+  fetchOrders();
 });
 
 sort_button.addEventListener("change", function () {
   if (this.checked) {
     const sort_objects = objects.slice();
     sort_objects.sort(function (a, b) {
-      let priceA = Number(a.price),
-        priceB = Number(b.price);
+      let priceA = Number(a.price), priceB = Number(b.price);
       return priceA - priceB;
     });
     object_list_search(sort_objects);
