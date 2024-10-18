@@ -5,18 +5,22 @@ import FAQItem from './FAQItem';
 const FAQ = () => {
   const faqData = [
     {
+      id:1,
       question: 'What types of cars do you offer?',
       answer: 'We offer a wide variety of cars, including sedans, SUVs, sports cars, and electric vehicles. You can explore our complete car catalog for more details.',
     },
     {
+      id:2,
       question: 'Do you offer financing options?',
       answer: 'Yes, we provide various financing options to suit different needs. Our finance team can work with you to find the best solution.',
     },
     {
+      id:3,
       question: 'What is your return policy for car purchases?',
       answer: 'We offer a 7-day return policy for most of our vehicles. Please review our detailed return policy for more information.',
     },
     {
+      id:4,
       question: 'Do you provide warranty for your cars?',
       answer: 'Yes, all our cars come with a warranty. The duration and coverage may vary depending on the vehicle. We also offer extended warranty options.',
     },
@@ -32,7 +36,7 @@ const FAQ = () => {
             <div className="w-dyn-list">
               <div role="list" className="w-dyn-items">
                 {faqData.map((faq, index) => (
-                    <FAQItem key={index} question={faq.question} answer={faq.answer} />
+                    <FAQItem key={faq.id} question={faq.question} answer={faq.answer} />
                 ))}
               </div>
             </div>
