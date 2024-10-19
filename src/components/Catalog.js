@@ -1,14 +1,14 @@
 import React, { useState, useContext } from "react";
 import "../styles/Catalog.css";
 import CatalogItem from "./CatalogItem";
-import { CarsContext } from "../context/CarsContext"; // Import context
+import { CarsContext } from "../context/CarsContext";
 
 const Catalog = () => {
-    const { cars } = useContext(CarsContext); // Use context to get cars data
+    const { cars } = useContext(CarsContext);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortType, setSortType] = useState("default");
-    const [minPrice, setMinPrice] = useState(""); // State for min price filter
-    const [maxPrice, setMaxPrice] = useState(""); // State for max price filter
+    const [minPrice, setMinPrice] = useState("");
+    const [maxPrice, setMaxPrice] = useState("");
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -27,8 +27,8 @@ const Catalog = () => {
     };
 
     const handleClearFilters = () => {
-        setMinPrice(""); // Reset min price
-        setMaxPrice(""); // Reset max price
+        setMinPrice("");
+        setMaxPrice("");
     };
 
     const filteredCars = cars

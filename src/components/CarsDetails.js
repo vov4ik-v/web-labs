@@ -1,11 +1,10 @@
-// CarDetails.js
 import React, { useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { CarsContext } from '../context/CarsContext'; // Import context
+import { CarsContext } from '../context/CarsContext';
 import '../styles/CarsDetails.css';
 
 const CarDetails = () => {
-    const { cars } = useContext(CarsContext); // Use context to get cars data
+    const { cars } = useContext(CarsContext);
     const { id } = useParams();
     const navigate = useNavigate();
     const car = cars.find((car) => car.id === parseInt(id));
@@ -18,7 +17,7 @@ const CarDetails = () => {
         navigate('/catalog');
     };
 
-    const colors = ["Original", "Black", "Silver", "White", "Red"]; // Example color options
+    const colors = ["Original", "Black", "Silver", "White", "Red"];
 
     return (
         <div className="car-detail-container">
