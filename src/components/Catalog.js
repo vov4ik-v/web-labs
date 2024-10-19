@@ -34,8 +34,8 @@ const Catalog = () => {
     const filteredCars = cars
         .filter((car) => {
             const matchesSearchTerm =
-                car.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                car.description.toLowerCase().includes(searchTerm.toLowerCase());
+                car.name.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+                car.description.toLowerCase().includes(searchTerm.trim().toLowerCase());
             const matchesPriceRange =
                 (minPrice === "" || car.price >= parseInt(minPrice)) &&
                 (maxPrice === "" || car.price <= parseInt(maxPrice));
