@@ -10,7 +10,7 @@
 
 .product-item {
     width: calc(25% - 1.5rem);
-    min-width: 360px;
+    min-width: 290px;
     box-sizing: border-box;
     height: 100%;
     display: flex;
