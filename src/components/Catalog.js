@@ -1,7 +1,11 @@
+// Catalog.jsx
 import React, { useState, useContext } from "react";
 import "../styles/Catalog.css";
-import CatalogItem from "./CatalogItem";
 import { CarsContext } from "../context/CarsContext";
+import CatalogItem from "./CatalogItem";
+import Button from './Button';
+import Input from './Input';
+import Select from './Select';
 
 const Catalog = () => {
     const { cars } = useContext(CarsContext);
@@ -10,21 +14,13 @@ const Catalog = () => {
     const [minPrice, setMinPrice] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
 
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
-
-    const handleSortChange = (event) => {
-        setSortType(event.target.value);
-    };
-
-    const handleMinPriceChange = (event) => {
-        setMinPrice(event.target.value);
-    };
-
-    const handleMaxPriceChange = (event) => {
-        setMaxPrice(event.target.value);
-    };
+    const sortOptions = [
+        { value: "default", label: "Sort by Price" },
+        { value: "asc", label: "Price: Low to High" },
+        { value: "desc", label: "Price: High to Low" },
+        { value: "horsepower-asc", label: "Horsepower: Low to High" },
+        { value: "horsepower-desc", label: "Horsepower: High to Low" }
+    ];
 
     const handleClearFilters = () => {
         setMinPrice("");
@@ -60,42 +56,36 @@ const Catalog = () => {
             <h1 className="catalog-title">Premium Cars Catalog</h1>
 
             <div className="catalog-filters">
-                <input
+                <Input
                     type="text"
                     placeholder="Search by name or description"
                     value={searchTerm}
-                    onChange={handleSearchChange}
-                    className="catalog-search"
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
 
                 <div className="price-range-filters">
-                    <input
+                    <Input
                         type="number"
                         placeholder="Min"
                         value={minPrice}
-                        onChange={handleMinPriceChange}
-                        className="catalog-price-input"
+                        onChange={(e) => setMinPrice(e.target.value)}
                     />
-                    <input
+                    <Input
                         type="number"
                         placeholder="Max"
                         value={maxPrice}
-                        onChange={handleMaxPriceChange}
-                        className="catalog-price-input"
+                        onChange={(e) => setMaxPrice(e.target.value)}
                     />
-                    <button className="catalog-clear-btn" onClick={handleClearFilters}>
+                    <Button onClick={handleClearFilters} className={'catalog-clear-btn'}>
                         Clear
-                    </button>
+                    </Button>
                 </div>
 
-                {/* Sort Options */}
-                <select value={sortType} onChange={handleSortChange} className="catalog-sort">
-                    <option value="default">Sort by Price</option>
-                    <option value="asc">Price: Low to High</option>
-                    <option value="desc">Price: High to Low</option>
-                    <option value="horsepower-asc">Horsepower: Low to High</option>
-                    <option value="horsepower-desc">Horsepower: High to Low</option>
-                </select>
+                <Select
+                    options={sortOptions}
+                    value={sortType}
+                    onChange={(e) => setSortType(e.target.value)}
+                />
             </div>
 
             <div className="cars-grid">
