@@ -10,17 +10,18 @@ import {CarsProvider} from './context/CarsContext';
 function App() {
     return (
         <Router>
-            <div className="App">
-                <Navbar/>
-                <CarsProvider>
+            <CarsProvider>
+                <div className="App">
+                    <Navbar/>
                     <Routes>
                         <Route path="/" exact element={<Home/>}/>
                         <Route path="/catalog" element={<Catalog/>}/>
                         <Route path="/car/:id" element={<CarDetails/>}/>
                     </Routes>
-                </CarsProvider>
-                <Footer/>
-            </div>
+                    <Footer/>
+                </div>
+            </CarsProvider>
+                
         </Router>
     );
 }

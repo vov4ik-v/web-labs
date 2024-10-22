@@ -1,37 +1,45 @@
-import React, { useContext } from 'react';
-import { CarsContext } from '../context/CarsContext';
+// src/components/Products.js
+import React, { useContext, useState } from 'react';
+import { CarsContext } from '../context/CarsContext'; // Контекст з автомобілями
 import ProductItem from './ProductItem';
-import ViewMoreButton from './ViewMoreButton';
+import Loader from './Loader';  // Loader для спінера
+import Button from './Button';  // Використовуємо Button
 import '../styles/Product.css';
 
 const Products = () => {
-    const { cars } = useContext(CarsContext);
-    const [showAll, setShowAll] = React.useState(false);
+    const { cars, loading } = useContext(CarsContext); // Отримуємо машини з контексту
+    const [showAll, setShowAll] = useState(false);
 
     const handleViewMore = () => {
         setShowAll(!showAll);
     };
 
-    const carsToDisplay = showAll ? cars.slice(0, 8) : cars.slice(0, 4);
+    const carsToDisplay = showAll ? cars : cars.slice(0, 4); // Показуємо обмежену кількість машин або всі
 
     return (
         <div className="product-wrapper">
             <h2>
                 <span className="underline-light_blue">Our Premium Cars</span>
             </h2>
-            <div className="product-div">
-                <div className="flex-row">
-                    {carsToDisplay.map((car) => (
-                        <ProductItem
-                            key={car.id}
-                            image={car.image}
-                            name={car.name}
-                            description={car.description}
-                        />
-                    ))}
+            {loading ? (
+                <Loader />  // Показуємо спінер, поки дані завантажуються
+            ) : (
+                <div className="product-div">
+                    <div className="flex-row">
+                        {carsToDisplay.map((car) => (
+                            <ProductItem
+                                key={car.id}
+                                image={car.image}
+                                name={car.name}
+                                description={car.description}
+                            />
+                        ))}
+                    </div>
                 </div>
-            </div>
-            <ViewMoreButton onClick={handleViewMore} text={showAll ? 'Less' : 'View more'} />
+            )}
+            <Button onClick={handleViewMore} className="view-more-btn">
+                {showAll ? 'Less' : 'View more'}
+            </Button>
         </div>
     );
 };

@@ -1,19 +1,22 @@
-// Catalog.jsx
-import React, { useState, useContext } from "react";
+// src/components/Catalog.js
+import React, { useState, useEffect } from "react";
 import "../styles/Catalog.css";
-import { CarsContext } from "../context/CarsContext";
+import { getCars } from "../services/api"; // Новий API для фільтрації
 import CatalogItem from "./CatalogItem";
 import Button from './Button';
 import Input from './Input';
 import Select from './Select';
+import Loader from './Loader'; // Спінер для завантаження
 
 const Catalog = () => {
-    const { cars } = useContext(CarsContext);
+    const [cars, setCars] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortType, setSortType] = useState("default");
     const [minPrice, setMinPrice] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
 
+    // Опції сортування
     const sortOptions = [
         { value: "default", label: "Sort by Price" },
         { value: "asc", label: "Price: Low to High" },
@@ -22,46 +25,64 @@ const Catalog = () => {
         { value: "horsepower-desc", label: "Horsepower: High to Low" }
     ];
 
+    // Виклик API після зміни будь-якого фільтру
+    const fetchFilteredCars = () => {
+        setLoading(true);
+        getCars(searchTerm, minPrice, maxPrice, sortType)
+            .then(response => {
+                setCars(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching cars:', error);
+                setLoading(false);
+            });
+    };
+
+    // Запускаємо пошук по натисканню кнопки пошуку або зміни сортування
+    useEffect(() => {
+        fetchFilteredCars();
+    }, [sortType]); // Автоматично викликається при зміні сортування
+
+    const handleSearchClick = () => {
+        fetchFilteredCars(); // Викликаємо пошук при натисканні на іконку пошуку
+    };
+
+    const handlePriceOkClick = () => {
+        fetchFilteredCars(); // Викликаємо пошук при натисканні кнопки "OK" біля полів мінімальної та максимальної ціни
+    };
+
     const handleClearFilters = () => {
         setMinPrice("");
         setMaxPrice("");
+        setSearchTerm("");
+        fetchFilteredCars();
     };
 
-    const filteredCars = cars
-        .filter((car) => {
-            const matchesSearchTerm =
-                car.name.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
-                car.description.toLowerCase().includes(searchTerm.trim().toLowerCase());
-            const matchesPriceRange =
-                (minPrice === "" || car.price >= parseInt(minPrice)) &&
-                (maxPrice === "" || car.price <= parseInt(maxPrice));
-            return matchesSearchTerm && matchesPriceRange;
-        })
-        .sort((a, b) => {
-            if (sortType === "asc") {
-                return a.price - b.price;
-            } else if (sortType === "desc") {
-                return b.price - a.price;
-            } else if (sortType === "horsepower-asc") {
-                return parseInt(a.characteristics?.Horsepower || 0) - parseInt(b.characteristics?.Horsepower || 0);
-            } else if (sortType === "horsepower-desc") {
-                return parseInt(b.characteristics?.Horsepower || 0) - parseInt(a.characteristics?.Horsepower || 0);
-            } else {
-                return 0;
-            }
-        });
+    const handleCancelClick = () => {
+        setMinPrice("");
+        setMaxPrice("");
+        setSearchTerm("");
+        setSortType("default");
+        fetchFilteredCars(); // Очищаємо фільтри і відправляємо запит
+    };
 
     return (
         <div className="catalog-wrapper">
             <h1 className="catalog-title">Premium Cars Catalog</h1>
 
             <div className="catalog-filters">
-                <Input
-                    type="text"
-                    placeholder="Search by name or description"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                <div className="search-filter">
+                    <Input
+                        type="text"
+                        placeholder="Search by name or description"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <button className="search-btn" onClick={handleSearchClick}>
+                        <i className="fa fa-search"></i> {/* Іконка пошуку */}
+                    </button>
+                </div>
 
                 <div className="price-range-filters">
                     <Input
@@ -76,8 +97,8 @@ const Catalog = () => {
                         value={maxPrice}
                         onChange={(e) => setMaxPrice(e.target.value)}
                     />
-                    <Button onClick={handleClearFilters} className={'catalog-clear-btn'}>
-                        Clear
+                    <Button onClick={handlePriceOkClick} className="price-ok-btn">
+                        OK
                     </Button>
                 </div>
 
@@ -86,20 +107,33 @@ const Catalog = () => {
                     value={sortType}
                     onChange={(e) => setSortType(e.target.value)}
                 />
+
+                <div className="filter-actions">
+                    <Button onClick={handleClearFilters} className="clear-btn">
+                        Clear Filters
+                    </Button>
+                    <Button onClick={handleCancelClick} className="cancel-btn">
+                        Cancel
+                    </Button>
+                </div>
             </div>
 
-            <div className="cars-grid">
-                {filteredCars.map((car) => (
-                    <CatalogItem
-                        key={car.id}
-                        id={car.id}
-                        image={car.image}
-                        name={car.name}
-                        description={car.description}
-                        price={car.price}
-                    />
-                ))}
-            </div>
+            {loading ? (
+                <Loader /> // Показуємо спінер під час завантаження
+            ) : (
+                <div className="cars-grid">
+                    {cars.map((car) => (
+                        <CatalogItem
+                            key={car.id}
+                            id={car.id}
+                            image={car.image}
+                            name={car.name}
+                            description={car.description}
+                            price={car.price}
+                        />
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

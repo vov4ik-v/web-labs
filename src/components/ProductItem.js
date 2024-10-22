@@ -1,5 +1,5 @@
+// src/components/ProductItem.js
 import React from 'react';
-import '../styles/Product.css';
 
 const ProductItem = ({ image, name, description }) => {
     return (

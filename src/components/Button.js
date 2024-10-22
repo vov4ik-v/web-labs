@@ -1,12 +1,9 @@
+// src/components/Button.js
 import React from 'react';
-import '../styles/Catalog.css';
 
 const Button = ({ children, onClick, className = '' }) => {
     return (
-        <button
-            className={`${className}`}
-            onClick={onClick}
-        >
+        <button className={className} onClick={onClick}>
             {children}
         </button>
     );
