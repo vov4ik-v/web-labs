@@ -1,12 +1,11 @@
-// src/components/Catalog.js
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import "../styles/Catalog.css";
-import { getCars } from "../services/api"; // Новий API для фільтрації
+import {getCars} from "../services/api";
 import CatalogItem from "./CatalogItem";
 import Button from './Button';
 import Input from './Input';
 import Select from './Select';
-import Loader from './Loader'; // Спінер для завантаження
+import Loader from './Loader';
 
 const Catalog = () => {
     const [cars, setCars] = useState([]);
@@ -16,17 +15,15 @@ const Catalog = () => {
     const [minPrice, setMinPrice] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
 
-    // Опції сортування
     const sortOptions = [
-        { value: "default", label: "Sort by Price" },
-        { value: "asc", label: "Price: Low to High" },
-        { value: "desc", label: "Price: High to Low" },
-        { value: "horsepower-asc", label: "Horsepower: Low to High" },
-        { value: "horsepower-desc", label: "Horsepower: High to Low" }
+        {value: "default", label: "Sort by Price"},
+        {value: "asc", label: "Price: Low to High"},
+        {value: "desc", label: "Price: High to Low"},
+        {value: "horsepower-asc", label: "Horsepower: Low to High"},
+        {value: "horsepower-desc", label: "Horsepower: High to Low"}
     ];
 
-    // Виклик API після зміни будь-якого фільтру
-    const fetchFilteredCars = () => {
+    const fetchFilteredCars = (searchTerm = '', minPrice  = '', maxPrice = '', sortType = '') => {
         setLoading(true);
         getCars(searchTerm, minPrice, maxPrice, sortType)
             .then(response => {
@@ -39,32 +36,30 @@ const Catalog = () => {
             });
     };
 
-    // Запускаємо пошук по натисканню кнопки пошуку або зміни сортування
     useEffect(() => {
         fetchFilteredCars();
-    }, [sortType]); // Автоматично викликається при зміні сортування
+    }, []);
 
     const handleSearchClick = () => {
-        fetchFilteredCars(); // Викликаємо пошук при натисканні на іконку пошуку
+        fetchFilteredCars(searchTerm.trim(), minPrice, maxPrice, sortType);
     };
 
     const handlePriceOkClick = () => {
-        fetchFilteredCars(); // Викликаємо пошук при натисканні кнопки "OK" біля полів мінімальної та максимальної ціни
+        fetchFilteredCars(searchTerm.trim(), minPrice, maxPrice, sortType);
     };
+
+    const handleSortChange = (e) => {
+        setSortType(e.target.value);
+        fetchFilteredCars(searchTerm.trim(), minPrice, maxPrice, sortType);
+    };
+
 
     const handleClearFilters = () => {
+        setSearchTerm("");
         setMinPrice("");
         setMaxPrice("");
-        setSearchTerm("");
-        fetchFilteredCars();
-    };
-
-    const handleCancelClick = () => {
-        setMinPrice("");
-        setMaxPrice("");
-        setSearchTerm("");
         setSortType("default");
-        fetchFilteredCars(); // Очищаємо фільтри і відправляємо запит
+        fetchFilteredCars();
     };
 
     return (
@@ -79,9 +74,8 @@ const Catalog = () => {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <button className="search-btn" onClick={handleSearchClick}>
-                        <i className="fa fa-search"></i> {/* Іконка пошуку */}
-                    </button>
+                    <Button className="search-btn" onClick={handleSearchClick}>Пошук</Button>
+
                 </div>
 
                 <div className="price-range-filters">
@@ -105,21 +99,18 @@ const Catalog = () => {
                 <Select
                     options={sortOptions}
                     value={sortType}
-                    onChange={(e) => setSortType(e.target.value)}
+                    onChange={(e) => handleSortChange(e)}
                 />
 
                 <div className="filter-actions">
-                    <Button onClick={handleClearFilters} className="clear-btn">
+                    <Button onClick={handleClearFilters} className="catalog-clear-btn">
                         Clear Filters
-                    </Button>
-                    <Button onClick={handleCancelClick} className="cancel-btn">
-                        Cancel
                     </Button>
                 </div>
             </div>
 
             {loading ? (
-                <Loader /> // Показуємо спінер під час завантаження
+                <Loader/>
             ) : (
                 <div className="cars-grid">
                     {cars.map((car) => (

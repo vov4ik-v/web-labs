@@ -1,20 +1,19 @@
-// src/components/Products.js
 import React, { useContext, useState } from 'react';
-import { CarsContext } from '../context/CarsContext'; // Контекст з автомобілями
+import { CarsContext } from '../context/CarsContext';
 import ProductItem from './ProductItem';
-import Loader from './Loader';  // Loader для спінера
-import Button from './Button';  // Використовуємо Button
+import Loader from './Loader';
+import Button from './Button';
 import '../styles/Product.css';
 
 const Products = () => {
-    const { cars, loading } = useContext(CarsContext); // Отримуємо машини з контексту
+    const { cars, loading } = useContext(CarsContext);
     const [showAll, setShowAll] = useState(false);
 
     const handleViewMore = () => {
         setShowAll(!showAll);
     };
 
-    const carsToDisplay = showAll ? cars : cars.slice(0, 4); // Показуємо обмежену кількість машин або всі
+    const carsToDisplay = showAll ? cars.slice(0,8) : cars.slice(0, 4);
 
     return (
         <div className="product-wrapper">
@@ -22,7 +21,7 @@ const Products = () => {
                 <span className="underline-light_blue">Our Premium Cars</span>
             </h2>
             {loading ? (
-                <Loader />  // Показуємо спінер, поки дані завантажуються
+                <Loader />
             ) : (
                 <div className="product-div">
                     <div className="flex-row">

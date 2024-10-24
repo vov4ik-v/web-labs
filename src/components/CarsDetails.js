@@ -1,10 +1,9 @@
-// src/components/CarDetails.js
 import React, {useEffect, useState} from 'react';
 import {useParams, useNavigate} from 'react-router-dom';
-import {getCarById} from '../services/api'; // Використовуємо getCarById для отримання даних
-import Loader from './Loader';  // Loader для спінера
-import Select from './Select';  // Використовуємо Select
-import Button from './Button';  // Використовуємо Button
+import {getCarById} from '../services/api';
+import Loader from './Loader';
+import Select from './Select';
+import Button from './Button';
 import '../styles/CarsDetails.css';
 
 const CarDetails = () => {
@@ -12,7 +11,14 @@ const CarDetails = () => {
     const navigate = useNavigate();
     const [car, setCar] = useState(null);
     const [loading, setLoading] = useState(true);
-    const colors = ["Original", "Black", "Silver", "White", "Red"];
+    const [selectedColor, setSelectedColor] = useState('');
+    const colors = [
+        {value: "original", label: "Original"},
+        {value: "black", label: "Black"},
+        {value: "silver", label: "Silver"},
+        {value: "white", label: "White"},
+        {value: "red", label: "Red"}
+    ];
 
     useEffect(() => {
         setLoading(true);
@@ -31,8 +37,12 @@ const CarDetails = () => {
         navigate('/catalog');
     };
 
+    const handleColorChange = (e) => {
+        setSelectedColor(e.target.value);
+    };
+
     if (loading) {
-        return <Loader/>;  // Показуємо спінер, поки дані завантажуються
+        return <Loader/>;
     }
 
     if (!car) {
@@ -54,32 +64,28 @@ const CarDetails = () => {
                             <h4>Select Color:</h4>
                             <Select
                                 options={colors}
-                                value={''}
-                                onChange={(e) => console.log(e.target.value)}
-                                placeholder="Select Color"
+                                value={selectedColor}
+                                onChange={handleColorChange}
                             />
                         </div>
                     </div>
 
-                    {/*{car.characteristics && (*/}
-                    {/*    {Object.entries(car.characteristics).map(([key, value]) => (*/}
-
                     <div className="characteristics-grid">
                         <div className="characteristic-item">
-                            <span className="characteristic-label">Horsepower:</span>
-                            <span className="characteristic-value">car.horsepower</span>
+                            <span className="characteristic-label">Horsepower: </span>
+                            <span className="characteristic-value">{car.horsepower}</span>
                         </div>
                         <div className="characteristic-item">
-                            <span className="characteristic-label">Top Speed:</span>
-                            <span className="characteristic-value">car.top_speed</span>
+                            <span className="characteristic-label">Top Speed: </span>
+                            <span className="characteristic-value">{car.topSpeed}</span>
                         </div>
                         <div className="characteristic-item">
-                            <span className="characteristic-label">0-60 mph:</span>
-                            <span className="characteristic-value">car.zero_to_sixty</span>
+                            <span className="characteristic-label">0-60 mph: </span>
+                            <span className="characteristic-value">{car.zeroToSixty}</span>
                         </div>
                         <div className="characteristic-item">
-                            <span className="characteristic-label">Weight:</span>
-                            <span className="characteristic-value">car.weight</span>
+                            <span className="characteristic-label">Weight: </span>
+                            <span className="characteristic-value">{car.weight}</span>
                         </div>
                     </div>
                 </div>
@@ -88,8 +94,12 @@ const CarDetails = () => {
             <div className="car-actions">
                 <p className="car-price">Price: ${car.price.toLocaleString()}</p>
                 <div className="action-buttons">
-                    <Button onClick={handleGoBack} text="Go Back"/>
-                    <Button text="Add to Cart"/>
+                    <Button onClick={handleGoBack}>
+                        Go Back
+                    </Button>
+                    <Button>
+                        Add to Cart
+                    </Button>
                 </div>
             </div>
         </div>
