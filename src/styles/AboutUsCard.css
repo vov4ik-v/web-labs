@@ -1,0 +1,27 @@
+.about-us__card {
+    border-radius: 2rem;
+    border: 3px solid #212121;
+    width: 15vw;
+    padding: 2rem;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: flex-start;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+.about-us__card__title {
+    font-size: 2rem;
+    margin: 0;
+    line-height: 1;
+    font-family: 'Ramabhadra';
+}
+
+.about-us__card__text {
+    font-size: 1.25rem;
+    margin: 0;
+    line-height: 1.2;
+}
