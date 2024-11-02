@@ -15,12 +15,12 @@ const CarDetails = () => {
     const dispatch = useDispatch();
     const [car, setCar] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [selectedColor, setSelectedColor] = useState(''); // Default no color selected
+    const [selectedColor, setSelectedColor] = useState('');
     const [quantity, setQuantity] = useState(1);
     const [maxStock, setMaxStock] = useState(0);
 
     const colors = [
-        { value: '', label: 'Select Color' }, // Default placeholder option
+        { value: '', label: 'Select Color' },
         ...car?.stock.map(stockItem => ({
             value: stockItem.color,
             label: stockItem.color.charAt(0).toUpperCase() + stockItem.color.slice(1)
@@ -47,9 +47,8 @@ const CarDetails = () => {
     const handleColorChange = (e) => {
         const color = e.target.value;
         setSelectedColor(color);
-        setQuantity(1); // Reset quantity to 1 whenever color changes
+        setQuantity(1);
 
-        // Find the selected color's stock and set maxStock
         const selectedStockItem = car.stock.find(stock => stock.color === color);
         setMaxStock(selectedStockItem ? selectedStockItem.stock : 0);
     };

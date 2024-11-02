@@ -4,6 +4,7 @@
 .cart-container {
     width: 100%;
     max-width: 1200px; /* Limit width for very large screens */
+    min-height: 670px;
     margin: 0 auto;
     padding: 40px 20px;
     display: flex;
