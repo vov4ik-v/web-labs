@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/cars';
+const API_DOMAIN = 'http://localhost:8080/'
+
+const API_URL = `${API_DOMAIN}api/cars`;
 
 export const getCars = (searchTerm = '', minPrice = '', maxPrice = '', sortType = '') => {
     const params = new URLSearchParams();

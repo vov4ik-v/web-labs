@@ -15,11 +15,9 @@ const cartReducer = (state = initialState, action) => {
             );
             let updatedCartItems;
             if (existingItemIndex >= 0) {
-                // Update quantity if item already exists
                 updatedCartItems = [...state.cartItems];
                 updatedCartItems[existingItemIndex].quantity += action.payload.quantity;
             } else {
-                // Add new item
                 updatedCartItems = [...state.cartItems, action.payload];
             }
             return { ...state, cartItems: updatedCartItems };

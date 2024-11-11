@@ -5,6 +5,7 @@ import Loader from './Loader';
 import Select from './Select';
 import Button from './Button';
 import Input from './Input';
+import Modal from './Modal'; // імпорт нового компоненту
 import '../styles/CarsDetails.css';
 import { useDispatch } from 'react-redux';
 import { addToCart } from "../redux/cartActions";
@@ -18,6 +19,7 @@ const CarDetails = () => {
     const [selectedColor, setSelectedColor] = useState('');
     const [quantity, setQuantity] = useState(1);
     const [maxStock, setMaxStock] = useState(0);
+    const [isModalOpen, setIsModalOpen] = useState(false); // новий стейт для модалки
 
     const colors = [
         { value: '', label: 'Select Color' },
@@ -70,7 +72,12 @@ const CarDetails = () => {
         }
 
         dispatch(addToCart({ ...car, quantity, selectedColor }));
+        setIsModalOpen(true);
+        setQuantity(1)
     };
+
+    const closeModal = () => setIsModalOpen(false);
+    const goToCart = () => navigate('/cart');
 
     if (loading) {
         return <Loader />;
@@ -141,6 +148,8 @@ const CarDetails = () => {
                     <Button onClick={handleAddToCart}>Add to Cart</Button>
                 </div>
             </div>
+
+            <Modal isOpen={isModalOpen} onClose={closeModal} onGoToCart={goToCart} />
         </div>
     );
 };
