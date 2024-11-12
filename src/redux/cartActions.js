@@ -1,4 +1,11 @@
-import {ADD_TO_CART, CLEAR_CART, REMOVE_FROM_CART, SET_CART} from "./actionTypes";
+// cartActions.js
+import {
+    ADD_TO_CART,
+    CLEAR_CART,
+    REMOVE_FROM_CART,
+    SET_CART,
+    UPDATE_CART_ITEM_QUANTITY,
+} from "./actionTypes";
 
 const saveCartToLocalStorage = (cartItems) => {
     localStorage.setItem('cart', JSON.stringify(cartItems));
@@ -29,5 +36,15 @@ export const clearCart = () => {
     return (dispatch) => {
         dispatch({ type: CLEAR_CART });
         localStorage.removeItem('cart');
+    };
+};
+
+export const updateCartItemQuantity = (id, selectedColor, quantity) => {
+    return (dispatch, getState) => {
+        dispatch({
+            type: UPDATE_CART_ITEM_QUANTITY,
+            payload: { id, selectedColor, quantity },
+        });
+        saveCartToLocalStorage(getState().cart.cartItems);
     };
 };
