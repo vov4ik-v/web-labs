@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const API_DOMAIN = 'http://localhost:8080/'
-
+const API_DOMAIN = 'http://localhost:8080/';
 const API_URL = `${API_DOMAIN}api/cars`;
 
 export const getCars = (searchTerm = '', minPrice = '', maxPrice = '', sortType = '') => {
@@ -16,4 +15,8 @@ export const getCars = (searchTerm = '', minPrice = '', maxPrice = '', sortType 
 
 export const getCarById = (id) => {
     return axios.get(`${API_URL}/${id}`);
+};
+
+export const signupUser = (email, username, password) => {
+    return axios.post(`${API_DOMAIN}api/auth/signup`, { email, username, password });
 };
